@@ -13,7 +13,7 @@ describe "Invoices Api" do
     expect(response).to be_successful
 
     invoices = JSON.parse(response.body)
-    expect(invoices.count).to eq(3)
+    expect(invoices["data"].count).to eq(3)
   end
 
   it "sends a single merchant resource" do
@@ -26,6 +26,6 @@ describe "Invoices Api" do
     invoice = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(invoice["id"]).to eq(id)
+    expect(invoice["data"]["id"].to_i).to eq(id)
   end
 end

@@ -10,7 +10,7 @@ describe "Customers Api" do
 
     customers = JSON.parse(response.body)
 
-    expect(customers.count).to eq(3)
+    expect(customers["data"].count).to eq(3)
   end
 
   it "sends a single customer resource" do
@@ -21,19 +21,66 @@ describe "Customers Api" do
     customer = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(customer["id"]).to eq(id)
+    expect(customer["data"]["id"].to_i).to eq(id)
   end
 
   describe "sends a resource based on a customer attribute" do
-    xit "sends a resource based on customer name" do
-      customer = create(:customer)
+    it "sends a resource based on customer name" do
+      starting_customer = create(:customer)
 
-      get "/api/v1/customers/find?name=#{customer.first_name}"
+      get "/api/v1/customers/find?first_name=#{starting_customer.first_name}"
 
       customer = JSON.parse(response.body)
 
       expect(response).to be_successful
-      expect(customer[:name]).to eq(customer.first_name)
+
+      expect(customer["data"]["attributes"]["first_name"]).to eq(starting_customer.first_name)
+    end
+
+    it "sends a resource based on a customer id" do
+      starting_customer = create(:customer)
+
+      get "/api/v1/customers/find?id=#{starting_customer.id}"
+
+      customer = JSON.parse(response.body)
+
+      expect(response).to be_successful
+
+      expect(customer["data"]["id"].to_i).to eq(starting_customer.id)
+    end
+
+    it "sends a resource based on customer last name" do
+      starting_customer = create(:customer)
+
+      get "/api/v1/customers/find?last_name=#{starting_customer.last_name}"
+
+      customer = JSON.parse(response.body)
+
+      expect(response).to be_successful
+
+      expect(customer["data"]["attributes"]["last_name"]).to eq(starting_customer.last_name)
+    end
+
+    it "sends a resource based on customer created at date" do
+      starting_customer = create(:customer, created_at: "2012-03-27T14:54:05.000Z")
+
+      get "/api/v1/customers/find?created_at=#{starting_customer.created_at}"
+
+      customer = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(customer["data"]["id"].to_i).to eq(starting_customer.id)
+    end
+
+    it "sends a resource based on customer updated_at date" do
+      starting_customer = create(:customer, created_at: "2012-03-27T14:54:05.000Z", updated_at: "2012-03-30T14:54:05.000Z")
+
+      get "/api/v1/customers/find?updated_at=#{starting_customer.updated_at}"
+
+      customer = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(customer["data"]["id"].to_i).to eq(starting_customer.id)
     end
   end
 end

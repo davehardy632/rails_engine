@@ -12,7 +12,7 @@ describe "Transactions Api" do
     expect(response).to be_successful
 
     transactions = JSON.parse(response.body)
-    expect(transactions.count).to eq(3)
+    expect(transactions["data"].count).to eq(3)
   end
 
     it "sends a single merchant resource" do
@@ -26,6 +26,6 @@ describe "Transactions Api" do
     transaction = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(transaction["id"]).to eq(id)
+    expect(transaction["data"]["id"].to_i).to eq(id)
   end
 end

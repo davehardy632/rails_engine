@@ -10,7 +10,7 @@ describe "Items Api" do
     expect(response).to be_successful
 
     items = JSON.parse(response.body)
-    expect(items.count).to eq(3)
+    expect(items["data"].count).to eq(3)
   end
 
   it "sends a single merchant resource" do
@@ -22,6 +22,6 @@ describe "Items Api" do
     item = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(item["id"]).to eq(id)
+    expect(item["data"]["id"].to_i).to eq(id)
   end
 end
