@@ -22,4 +22,53 @@ describe "Merchants Api" do
     expect(response).to be_successful
     expect(merchant["data"]["id"].to_i).to eq(id)
   end
+
+  describe "sends a resource based on a merchant attribute" do
+    it "sends a resource based on merchant name" do
+      starting_merchant = create(:merchant)
+
+      get "/api/v1/merchants/find?name=#{starting_merchant.name}"
+
+      merchant = JSON.parse(response.body)
+
+      expect(response).to be_successful
+
+      expect(merchant["data"]["attributes"]["name"]).to eq(starting_merchant.name)
+    end
+
+    it "sends a resource based on merchant created at date" do
+      starting_merchant = create(:merchant, created_at: "2012-03-27T14:54:05.000Z")
+
+      get "/api/v1/merchants/find?created_at=#{starting_merchant.created_at}"
+
+      merchant = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(merchant["data"]["id"].to_i).to eq(starting_merchant.id)
+    end
+
+    it "sends a resource based on merchant updated_at date" do
+      starting_merchant = create(:merchant, created_at: "2012-03-27T14:54:05.000Z", updated_at: "2012-03-30T14:54:05.000Z")
+
+      get "/api/v1/merchants/find?updated_at=#{starting_merchant.updated_at}"
+
+      merchant = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(merchant["data"]["id"].to_i).to eq(starting_merchant.id)
+    end
+
+    it "sends a random merchant record when random is passed in the url" do
+      create_list(:merchant, 3)
+
+      get "/api/v1/merchants/random.json"
+
+      merchant = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(merchant["data"]["attributes"]).to include("name")
+      expect(merchant["data"]["attributes"]).to include("created_at")
+      expect(merchant["data"]["attributes"]).to include("updated_at")
+    end
+  end
 end
