@@ -7,19 +7,19 @@ describe "Merchants Api" do
     get '/api/v1/merchants.json'
 
     expect(response).to be_successful
-
     merchants = JSON.parse(response.body)
-    expect(merchants.count).to eq(3)
+
+    expect(merchants["data"].count).to eq(3)
   end
 
-  it "sends a single item resource" do
+  it "sends a single merchant resource" do
     id = create(:merchant).id
 
     get "/api/v1/merchants/#{id}.json"
 
-    item = JSON.parse(response.body)
+    merchant = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(item["id"]).to eq(id)
+    expect(merchant["data"]["id"].to_i).to eq(id)
   end
 end
