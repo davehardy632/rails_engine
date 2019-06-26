@@ -1,4 +1,5 @@
-class TransactionSerializer
+  class TransactionSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :credit_card_number, :credit_card_expiration_date, :result
+  attributes :credit_card_number, :id, :invoice_id, :result
+  belongs_to :invoice
 end

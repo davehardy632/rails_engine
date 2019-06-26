@@ -20,6 +20,24 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      namespace :customers do
+          get "/:id/invoices", to: "invoice#index"
+          get "/:id/transactions", to: "transaction#index"
+      end
+    end
+  end
+  namespace :api do
+    namespace :v1 do
+      namespace :merchants do
+          get "/:id/items", to: "items#index"
+          # get "/:id/transactions", to: "transaction#index"
+      end
+    end
+  end
+
+
+  namespace :api do
+    namespace :v1 do
       resources :merchants, only: [:index, :show]
       resources :customers, only: [:index, :show]
       resources :invoices, only: [:index, :show]

@@ -123,5 +123,17 @@ describe "Merchants Api" do
       expect(response).to be_successful
       expect(same_merchant["data"].first["attributes"]["name"]).to eq(merchant_1.name)
     end
+
+    it "returns items associated with one merchant" do
+      merchant = create(:merchant)
+      item = create(:item)
+
+      get "/api/v1/merchants/#{merchant.id}/items"
+
+      items = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(item.count).to eq(3)
+    end
   end
 end

@@ -82,5 +82,31 @@ describe "Customers Api" do
       expect(response).to be_successful
       expect(customer["data"]["id"].to_i).to eq(starting_customer.id)
     end
+
+    it "returns invoices from a customers id" do
+      customer = create(:customer)
+      merchant = create(:merchant)
+      start_invoices = create_list(:invoice, 3, customer: customer, merchant: merchant)
+
+      get "/api/v1/customers/#{customer.id}/invoices"
+
+      invoices = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(invoices["data"].count).to eq(3)
+    end
+
+    it "loads a collection of transactions for a customer" do
+      customer = create(:customer)
+      merchant = create(:merchant)
+      invoice = create(:invoice, customer: customer, merchant: merchant)
+      start_transactions = create_list(:transaction, 3, invoice: invoice)
+
+      get "/api/v1/customers/#{customer.id}/transactions"
+
+      transactions = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
   end
 end
