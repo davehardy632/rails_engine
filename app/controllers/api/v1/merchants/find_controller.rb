@@ -1,7 +1,13 @@
 class Api::V1::Merchants::FindController < ApplicationController
 
+  def index
+    key = params.keys.first
+    value = params.values.first
+    render status: 200, json: MerchantSerializer.new(Merchant.where(key => value))
+  end
+
   def show
-    render json: MerchantSerializer.new(Merchant.find_by(merchant_params))
+    render status: 200, json: MerchantSerializer.new(Merchant.find_by(merchant_params))
   end
 
   private

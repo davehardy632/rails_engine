@@ -67,8 +67,61 @@ describe "Merchants Api" do
 
       expect(response).to be_successful
       expect(merchant["data"]["attributes"]).to include("name")
-      expect(merchant["data"]["attributes"]).to include("created_at")
-      expect(merchant["data"]["attributes"]).to include("updated_at")
+    end
+  end
+
+  describe "Returns all instances by given attributes" do
+    it "returns all instances of merchant by id" do
+      merchants = create_list(:merchant, 3)
+
+      first_merchant = merchants.first
+
+      get "/api/v1/merchants/find_all?id=#{first_merchant.id}"
+
+      same_merchant = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(same_merchant["data"].first["id"].to_i).to eq(first_merchant.id)
+    end
+
+
+    it "returns all instances of merchant by name" do
+      merchant_1 = create(:merchant, name: "john")
+      merchant_2 = create(:merchant, name: "bill")
+      merchant_3 = create(:merchant, name: "laura")
+
+      get "/api/v1/merchants/find_all?name=#{merchant_1.name}"
+
+      same_merchant = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(same_merchant["data"].first["attributes"]["name"]).to eq(merchant_1.name)
+    end
+
+    it "returns all instances of merchant by created at date" do
+      merchant_1 = create(:merchant, created_at: "2012-03-27T14:54:09.000Z")
+      merchant_2 = create(:merchant)
+      merchant_3 = create(:merchant)
+
+      get "/api/v1/merchants/find_all?created_at=#{merchant_1.created_at}"
+
+      same_merchant = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(same_merchant["data"].first["attributes"]["name"]).to eq(merchant_1.name)
+    end
+
+    it "returns all instances of merchant by created at date" do
+      merchant_1 = create(:merchant, created_at: "2012-03-27T14:54:09.000Z", updated_at: "2012-03-27T14:54:09.000Z")
+      merchant_2 = create(:merchant)
+      merchant_3 = create(:merchant)
+
+      get "/api/v1/merchants/find_all?created_at=#{merchant_1.updated_at}"
+
+      same_merchant = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(same_merchant["data"].first["attributes"]["name"]).to eq(merchant_1.name)
     end
   end
 end
