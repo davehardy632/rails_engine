@@ -32,10 +32,28 @@ Rails.application.routes.draw do
           get "/:id/items", to: "items#index"
           get "/:id/invoices", to: "invoice#index"
           get "/:id/favorite_customer", to: "customer#show"
+          get "/:id/revenue", to: "revenue#show"
       end
     end
   end
 
+  namespace :api do
+    namespace :v1 do
+      namespace :invoice_items do
+          get "/:id/item", to: "items#show"
+          get "/:id/invoice", to: "invoices#show"
+      end
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      namespace :invoices do
+          get "/:id/transactions", to: "transactions#show"
+          get "/:id/items", to: "items#show"
+      end
+    end
+  end
 
   namespace :api do
     namespace :v1 do
