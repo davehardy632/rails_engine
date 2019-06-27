@@ -126,14 +126,57 @@ describe "Merchants Api" do
 
     it "returns items associated with one merchant" do
       merchant = create(:merchant)
-      item = create(:item)
+      item_1 = create(:item, merchant: merchant)
+      item_2 = create(:item, merchant: merchant)
+      item_3 = create(:item, merchant: merchant)
 
       get "/api/v1/merchants/#{merchant.id}/items"
 
       items = JSON.parse(response.body)
 
       expect(response).to be_successful
-      expect(item.count).to eq(3)
+      expect(items["data"].count).to eq(3)
+    end
+
+    it "returns invoices associated with a merchant" do
+      merchant = create(:merchant)
+      customer = create(:customer)
+
+      invoice_1 = create(:invoice, merchant: merchant, customer: customer)
+      invoice_2 = create(:invoice, merchant: merchant, customer: customer)
+      invoice_3 = create(:invoice, merchant: merchant, customer: customer)
+
+      get "/api/v1/merchants/#{merchant.id}/invoices"
+
+      invoices = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(invoices["data"].count).to eq(3)
+    end
+  end
+
+  describe "business logic" do
+    before :each do
+      @merchant = create(:merchant)
+    end
+    it "returns customer with the most successful transactions" do
+      customer_1 = create(:customer, id: "1")
+      customer_2 = create(:customer, id: "2")
+      customer_3 = create(:customer, id: "3")
+
+      c1_invoice = create(:invoice, customer: customer_1, merchant: @merchant)
+      c2_invoice = create(:invoice, customer: customer_2, merchant: @merchant)
+      c3_invoice = create(:invoice, customer: customer_3, merchant: @merchant)
+
+      transactions_c1 = create_list(:transaction, 4, invoice: c1_invoice, result: "success")
+      transactions_c2 = create_list(:transaction, 2, invoice: c2_invoice, result: "success")
+      transactions_c3 = create_list(:transaction, 5, invoice: c3_invoice, result: "success")
+
+      get "/api/v1/merchants/#{@merchant.id}/favorite_customer"
+
+      customer = JSON.parse(response.body)
+binding.pry
+      expect(response).to be_successful
     end
   end
 end

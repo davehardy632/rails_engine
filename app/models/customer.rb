@@ -4,4 +4,16 @@ class Customer < ApplicationRecord
 
   has_many :invoices
   has_many :merchants, through: :invoices
+  has_many :transactions, through: :invoices
+
+  def self.merchant_favorite(merchant_id)
+    joins(:transactions)
+    .where("invoices.merchant_id = ?", merchant_id)
+    .where("transactions.result = ?", "success")
+    .select("customers.*, count(transactions.id) as transaction_number")
+    .group(:id)
+    .order("transaction_number desc")
+    .limit(1)
+    .first
+  end
 end

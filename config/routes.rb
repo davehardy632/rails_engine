@@ -30,7 +30,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :merchants do
           get "/:id/items", to: "items#index"
-          # get "/:id/transactions", to: "transaction#index"
+          get "/:id/invoices", to: "invoice#index"
+          get "/:id/favorite_customer", to: "customer#show"
       end
     end
   end

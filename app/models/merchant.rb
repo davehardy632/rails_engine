@@ -4,6 +4,7 @@ class Merchant < ApplicationRecord
   has_many :invoices
   has_many :customers, through: :invoices
   has_many :items
+  has_many :transactions, through: :invoices
 
   # attr_reader :name, :created_at, :updated_at
   #
@@ -12,7 +13,6 @@ class Merchant < ApplicationRecord
   #   @created_at = created_at
   #   @updated_at = updated_at
   # end
-
 
 
 end
