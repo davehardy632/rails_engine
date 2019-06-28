@@ -1,5 +1,5 @@
 class CustomerSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :id, :first_name, :last_name, :created_at, :updated_at
+  attributes :first_name, :id, :last_name
 
 end

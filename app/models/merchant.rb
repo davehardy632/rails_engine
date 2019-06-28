@@ -30,5 +30,7 @@ class Merchant < ApplicationRecord
     .sum("invoice_items.quantity * invoice_items.unit_price / 100").round(2)
   end
 
-
+  def self.associated_invoice(invoice_id)
+    joins(:invoices).where(invoices: {id: invoice_id}).first
+  end
 end

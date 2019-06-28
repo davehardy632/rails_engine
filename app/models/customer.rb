@@ -16,4 +16,10 @@ class Customer < ApplicationRecord
     .limit(1)
     .first
   end
+
+  def self.associated_invoice(invoice_id)
+    joins(:invoices)
+    .where("invoices.id = ?", invoice_id)
+    .first
+  end
 end
