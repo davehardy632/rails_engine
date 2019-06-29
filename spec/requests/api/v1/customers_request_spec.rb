@@ -82,5 +82,65 @@ describe "Customers Api" do
       expect(response).to be_successful
       expect(customer["data"]["id"].to_i).to eq(starting_customer.id)
     end
+
+    it "returns invoices from a customers id" do
+      customer = create(:customer)
+      merchant = create(:merchant)
+      start_invoices = create_list(:invoice, 3, customer: customer, merchant: merchant)
+
+      get "/api/v1/customers/#{customer.id}/invoices"
+
+      invoices = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(invoices["data"].count).to eq(3)
+    end
+
+    it "loads a collection of transactions for a customer" do
+      customer = create(:customer)
+      merchant = create(:merchant)
+      invoice = create(:invoice, customer: customer, merchant: merchant)
+      start_transactions = create_list(:transaction, 3, invoice: invoice)
+
+      get "/api/v1/customers/#{customer.id}/transactions"
+
+      transactions = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+
+    it "finds all customers by an id" do
+      customer = create(:customer)
+
+      get "/api/v1/customers/find_all?id=#{customer.id}"
+
+      end_customers = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+
+    it "finds all customers by first_name" do
+      customer = create(:customer, first_name: "John")
+      customer_2 = create(:customer, first_name: "John")
+
+      get "/api/v1/customers/find_all?first_name=#{customer.first_name}"
+
+      end_customers = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(end_customers["data"].count).to eq(2)
+      expect(end_customers["data"].first["attributes"]["first_name"]).to eq("John")
+      expect(end_customers["data"].second["attributes"]["first_name"]).to eq("John")
+    end
   end
+
+  # describe "customer business logic" do
+  #   it "loads the favorite merchant associated with a customer id" do
+  #     customer = create(:customer)
+  #     merchant = create(:merchant)
+  #     transaction_1 = create(:transaction)
+  #
+  #
+  #   end
+  # end
 end
