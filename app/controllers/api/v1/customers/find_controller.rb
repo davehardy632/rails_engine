@@ -4,6 +4,12 @@ class Api::V1::Customers::FindController < ApplicationController
     render json: CustomerSerializer.new(Customer.find_by(customer_params))
   end
 
+  def index
+    key = params.keys.first
+    value = params.values.first
+    render json: CustomerSerializer.new(Customer.where(key => value))
+  end
+
   private
 
   def customer_params

@@ -7,17 +7,11 @@ class Item < ApplicationRecord
   validates_presence_of :description
   validates_presence_of :unit_price
 
-  # def self.find_by_invoice_id(invoice_item_id)
-  #   joins(:invoice_items).select("items.*").where("invoice_items.id = ?", invoice_item_id)
-  # end
-
-  def self.for_invoice_item(invoice_item_id)
-    joins(:invoice_items)
-    .where(invoice_items: {id: invoice_item_id})
-    .first
-  end
-
   def self.find_by_invoice_id(invoice_id)
     joins(:invoice_items).where(invoice_items: {invoice_id: invoice_id})
+  end
+
+  def self.by_invoice_item(invoice_item_id)
+    joins(:invoice_items).where("invoice_items.id = ?", invoice_item_id).first
   end
 end

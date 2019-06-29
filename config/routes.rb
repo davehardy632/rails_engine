@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       namespace :customers do
           get "/:id/invoices", to: "invoice#index"
           get "/:id/transactions", to: "transaction#index"
+          get "/find_all", to: "find#index"
       end
     end
   end
@@ -39,15 +40,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      namespace :invoice_items do
-          get "/:id/item", to: "items#show"
-          get "/:id/invoice", to: "invoices#show"
-      end
-    end
-  end
-
-  namespace :api do
-    namespace :v1 do
       namespace :invoices do
           get "/:id/transactions", to: "transactions#show"
           get "/:id/items", to: "items#show"
@@ -57,15 +49,29 @@ Rails.application.routes.draw do
       end
     end
   end
+  namespace :api do
+    namespace :v1 do
+      namespace :invoice_items do
+        get "/:id/item", to: "item#show"
+        get "/:id/invoice", to: "invoice#show"
+        get "/find", to: "search#show"
+      end
+    end
+  end
 
   namespace :api do
     namespace :v1 do
       namespace :items do
-          # get "/:id/transactions", to: "transactions#show"
-          # get "/:id/items", to: "items#show"
           get "/:id/invoice_items", to: "invoice_items#show"
-          # get "/:id/customer", to: "customer#show"
-          # get "/:id/merchant", to: "merchant#show"
+          get "/:id/merchant", to: "merchant#show"
+      end
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      namespace :transactions do
+          get "/:id/invoice", to: "invoice#show"
       end
     end
   end

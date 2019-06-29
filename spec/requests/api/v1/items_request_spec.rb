@@ -41,7 +41,23 @@ describe "Items Api" do
     get "/api/v1/items/#{item.id}/invoice_items"
 
     invoice_items = JSON.parse(response.body)
+
     expect(response).to be_successful
     expect(invoice_items["data"].first["attributes"]["item_id"]).to eq(item.id)
+  end
+
+  it "loads associated merchant" do
+    customer = create(:customer)
+    merchant = create(:merchant)
+    item = create(:item, merchant: merchant)
+
+
+    get "/api/v1/items/#{item.id}/merchant"
+
+    end_merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(end_merchant["data"]["attributes"]["id"]).to eq(merchant.id)
+    expect(end_merchant["data"]["attributes"]["name"]).to eq(merchant.name)
   end
 end

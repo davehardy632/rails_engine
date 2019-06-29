@@ -11,7 +11,14 @@ class InvoiceItem < ApplicationRecord
   end
 
   def self.associated_item(item_id)
-    binding.pry
+    where("invoice_items.item_id = ?", item_id)
+  end
 
+  def self.find_all_by_invoice(invoice_id)
+    where(invoice_id: invoice_id)
+  end
+
+  def self.first_instance_by_id(invoice_item_id)
+    where(id: invoice_item_id).first
   end
 end

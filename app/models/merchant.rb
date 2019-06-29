@@ -33,4 +33,8 @@ class Merchant < ApplicationRecord
   def self.associated_invoice(invoice_id)
     joins(:invoices).where(invoices: {id: invoice_id}).first
   end
+
+  def self.by_associated_item(item_id)
+    joins(:items).where("items.id = ?", item_id).first
+  end
 end

@@ -6,7 +6,11 @@ class Invoice < ApplicationRecord
   has_many :items, through: :invoice_items
   has_many :transactions
 
-  def self.invoice_by_invoice_item(invoice_item_id)
+  def self.by_invoice_item(invoice_item_id)
     joins(:invoice_items).where(invoice_items: {id: invoice_item_id}).first
+  end
+
+  def self.associated_transacton(transaction_id)
+    joins(:transactions).where("transactions.id = ?", transaction_id).first
   end
 end

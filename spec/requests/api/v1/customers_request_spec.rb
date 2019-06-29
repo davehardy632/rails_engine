@@ -108,5 +108,29 @@ describe "Customers Api" do
 
       expect(response).to be_successful
     end
+
+    it "finds all customers by an id" do
+      customer = create(:customer)
+
+      get "/api/v1/customers/find_all?id=#{customer.id}"
+
+      end_customers = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+
+    it "finds all customers by first_name" do
+      customer = create(:customer, first_name: "John")
+      customer_2 = create(:customer, first_name: "John")
+
+      get "/api/v1/customers/find_all?first_name=#{customer.first_name}"
+
+      end_customers = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(end_customers["data"].count).to eq(2)
+      expect(end_customers["data"].first["attributes"]["first_name"]).to eq("John")
+      expect(end_customers["data"].second["attributes"]["first_name"]).to eq("John")
+    end
   end
 end
