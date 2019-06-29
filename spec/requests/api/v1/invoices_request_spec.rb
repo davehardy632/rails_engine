@@ -141,4 +141,19 @@ describe "Invoices Api" do
     expect(end_merch["data"]["attributes"]["id"]).to eq(merchant.id)
     expect(end_merch["data"]["attributes"]["name"]).to eq(merchant.name)
   end
+
+
+  describe "find single instance of invoice by attributes" do
+    customer = create(:customer)
+    merchant = create(:merchant)
+    invoice_1 = create(:invoice, customer: customer, merchant: merchant)
+    invoice_2 = create(:invoice, customer: customer, merchant: merchant)
+    invoice_3 = create(:invoice, customer: customer, merchant: merchant)
+
+    get "/api/v1/invoices/find?id=#{invoice_find['id']}"
+
+    end_invoice = JSON.parse(response.body)
+
+    expect(response).to be_successful
+  end
 end

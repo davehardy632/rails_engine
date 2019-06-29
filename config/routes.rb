@@ -55,6 +55,7 @@ Rails.application.routes.draw do
         get "/:id/item", to: "item#show"
         get "/:id/invoice", to: "invoice#show"
         get "/find", to: "search#show"
+        get "/find_all", to: "search#index"
       end
     end
   end
