@@ -134,13 +134,37 @@ describe "Customers Api" do
     end
   end
 
-  # describe "customer business logic" do
-  #   it "loads the favorite merchant associated with a customer id" do
-  #     customer = create(:customer)
-  #     merchant = create(:merchant)
-  #     transaction_1 = create(:transaction)
-  #
-  #
-  #   end
-  # end
+  describe "customer business logic" do
+    it "loads the favorite merchant associated with a customer id" do
+      customer = create(:customer)
+      merchant_1 = create(:merchant)
+      merchant_2 = create(:merchant)
+      merchant_3 = create(:merchant)
+
+
+      # one invoice for each new merchant, same customer
+      invoice_1 = create(:invoice, merchant: merchant_1, customer: customer)
+      # merchant 2 invoice
+      invoice_2 = create(:invoice, merchant: merchant_2, customer: customer)
+      #merchant 3 invoice
+      invoice_3 = create(:invoice, merchant: merchant_3, customer: customer)
+
+      # transactions 1-3 associated with merchant 1 through invoice 1
+      transaction_1 = create(:transaction, invoice: invoice_1)
+      transaction_2 = create(:transaction, invoice: invoice_1)
+      transaction_3 = create(:transaction, invoice: invoice_1)
+      # transaction 4 associated with merchant 2 through invoice 2
+      transaction_4 = create(:transaction, invoice: invoice_2)
+      # transactions 5-7 associated with merchant 3 through invoice 3 one of which is not successful
+      transaction_5 = create(:transaction, invoice: invoice_3)
+      transaction_6 = create(:transaction, invoice: invoice_3)
+      transaction_7 = create(:transaction, invoice: invoice_3)
+
+      get "/api/v1/customers/#{customer.id}/favorite_merchant"
+
+      fav_merchant = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+  end
 end

@@ -26,4 +26,14 @@ class Merchant < ApplicationRecord
     .where("items.id = ?", item_id)
     .first
   end
+
+  def self.customer_favorite(customer_id)
+    joins(:invoices)
+    .where("invoices.customer_id = ?", customer_id["id"])
+    .joins(:transactions).where("transactions.result = ?", "success")
+    .select("merchants.*, count(transactions.id) as transaction_count")
+    .group("merchants.id")
+    .order("transaction_count desc")
+    .first
+  end
 end
