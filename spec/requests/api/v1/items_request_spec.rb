@@ -60,4 +60,52 @@ describe "Items Api" do
     expect(end_merchant["data"]["attributes"]["id"]).to eq(merchant.id)
     expect(end_merchant["data"]["attributes"]["name"]).to eq(merchant.name)
   end
+
+  describe "search first instances of items by attribute" do
+    it "first instance by id" do
+      merchant = create(:merchant)
+      item = create(:item, merchant: merchant)
+
+      get "/api/v1/items/find?id=#{item.id}"
+
+      end_item = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+
+    it "first instance by unit_price" do
+      merchant = create(:merchant)
+      item = create(:item, merchant: merchant, name: "Item Deserunt Dicta", description: "Rem quos non dolores sit. Est facilis error ab adipisci consequuntur quo et. Vel error eos.", unit_price: "274.09", created_at: "2012-03-27T14:54:05.000Z", updated_at: "2012-03-27T14:54:05.000Z")
+
+      get "/api/v1/items/find?unit_price=#{274.09}"
+
+      end_item = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+
+  describe "search all instances of items by attribute" do
+    it "all instances by id" do
+      merchant = create(:merchant)
+      item = create(:item, merchant: merchant)
+
+      get "/api/v1/items/find_all?id=#{item.id}"
+
+      end_item = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+
+    it "all instances by unit_price" do
+      merchant = create(:merchant)
+      item = create(:item, merchant: merchant, name: "Item Deserunt Dicta", description: "Rem quos non dolores sit. Est facilis error ab adipisci consequuntur quo et. Vel error eos.", unit_price: "274.09", created_at: "2012-03-27T14:54:05.000Z", updated_at: "2012-03-27T14:54:05.000Z")
+
+      get "/api/v1/items/find?unit_price=#{576.32}"
+
+      end_item = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      end
+    end
+  end
 end

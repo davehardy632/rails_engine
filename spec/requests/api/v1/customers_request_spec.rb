@@ -133,4 +133,14 @@ describe "Customers Api" do
       expect(end_customers["data"].second["attributes"]["first_name"]).to eq("John")
     end
   end
+
+  # describe "customer business logic" do
+  #   it "loads the favorite merchant associated with a customer id" do
+  #     customer = create(:customer)
+  #     merchant = create(:merchant)
+  #     transaction_1 = create(:transaction)
+  #
+  #
+  #   end
+  # end
 end

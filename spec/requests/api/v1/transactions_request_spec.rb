@@ -44,4 +44,34 @@ describe "Transactions Api" do
     expect(end_invoice["data"]["attributes"]["customer_id"]).to eq(customer.id)
     expect(end_invoice["data"]["attributes"]["merchant_id"]).to eq(merchant.id)
   end
+
+  describe "finds first instance by attribute" do
+    it "finds instance by id" do
+      merchant = create(:merchant)
+      customer = create(:customer)
+      invoice = create(:invoice, merchant: merchant, customer: customer )
+      transaction = create(:transaction, invoice: invoice)
+
+      get "/api/v1/transactions/find?id=#{transaction.id}"
+
+      end_transaction = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+  end
+
+  describe "finds all instances by attribute" do
+    it "finds all instances by id" do
+      merchant = create(:merchant)
+      customer = create(:customer)
+      invoice = create(:invoice, merchant: merchant, customer: customer )
+      transaction = create(:transaction, invoice: invoice)
+
+      get "/api/v1/transactions/find_all?id=#{transaction.id}"
+
+      end_transaction = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+  end
 end

@@ -7,7 +7,8 @@ class InvoiceItem < ApplicationRecord
   validates_presence_of :unit_price
 
   def self.find_by_invoice(invoice_id)
-    where(invoice_id: invoice_id).joins(:invoice)
+    where(invoice_id: invoice_id)
+    .joins(:invoice)
   end
 
   def self.associated_item(item_id)
@@ -20,19 +21,23 @@ class InvoiceItem < ApplicationRecord
 # this method is for endpoint test invoice item
   def self.first_instance_by_attribute(key, value)
     if key == "unit_price"
-      # new_value = (value.to_f * 100).to_i
-      self.where(key => ((value.to_f * 100).to_i)).order(id: "asc").first
+      where(key => ((value.to_f * 100).to_i))
+      .order(id: "asc")
+      .first
     else
-      self.where(key => value).order(id: "asc").first
+      where(key => value)
+      .order(id: "asc")
+      .first
     end
   end
 
   def self.find_all_by_attribute(key, value)
     if key == "unit_price"
-      # new_value = (value.to_f * 100).to_i
-      self.where(key => ((value.to_f * 100).to_i)).order(id: "asc")
+      where(key => ((value.to_f * 100).to_i))
+      .order(id: "asc")
     else
-      self.where(key => value).order(id: "asc")
+      where(key => value)
+      .order(id: "asc")
     end
   end
 
