@@ -144,16 +144,34 @@ describe "Invoices Api" do
 
 
   describe "find single instance of invoice by attributes" do
-    customer = create(:customer)
-    merchant = create(:merchant)
-    invoice_1 = create(:invoice, customer: customer, merchant: merchant)
-    invoice_2 = create(:invoice, customer: customer, merchant: merchant)
-    invoice_3 = create(:invoice, customer: customer, merchant: merchant)
+    it "find first instance of invoice by id" do
+      customer = create(:customer)
+      merchant = create(:merchant)
+      invoice_1 = create(:invoice, customer: customer, merchant: merchant)
+      invoice_2 = create(:invoice, customer: customer, merchant: merchant)
+      invoice_3 = create(:invoice, customer: customer, merchant: merchant)
 
-    get "/api/v1/invoices/find?id=#{invoice_find['id']}"
+      get "/api/v1/invoices/find?id=#{invoice_1.id}"
 
-    end_invoice = JSON.parse(response.body)
+      end_invoice = JSON.parse(response.body)
 
-    expect(response).to be_successful
+      expect(response).to be_successful
+    end
+  end
+
+  describe "finds all instances of invoice by attributes" do
+    it "find first instance of invoice by id" do
+      customer = create(:customer)
+      merchant = create(:merchant)
+      invoice_1 = create(:invoice, customer: customer, merchant: merchant)
+      invoice_2 = create(:invoice, customer: customer, merchant: merchant)
+      invoice_3 = create(:invoice, customer: customer, merchant: merchant)
+
+      get "/api/v1/invoices/find_all?id=#{invoice_1.id}"
+
+      end_invoice = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
   end
 end
