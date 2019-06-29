@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :customers do
         get '/find', to: "find#show"
+        get '/:id/favorite_merchant', to: "merchant#show"
       end
     end
   end
