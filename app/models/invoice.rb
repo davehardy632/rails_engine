@@ -33,4 +33,13 @@ class Invoice < ApplicationRecord
       .order(id: "asc")
     end
   end
+
+  # def self.total_revenue(merchant_id)
+  #   joins(:transactions, :invoice_items)
+  #   .where("invoices.merchant_id = ?", merchant_id)
+  #   .where("transactions.result = ?", "success")
+  #   .select("invoices.*")
+  #   .sum("invoice_items.quantity * invoice_items.unit_price / 100")
+  #   .round(2)
+  # end
 end

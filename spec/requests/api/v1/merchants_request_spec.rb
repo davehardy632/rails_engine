@@ -190,9 +190,9 @@ describe "Merchants Api" do
       item_2 = create(:item, merchant: @merchant)
       item_3 = create(:item, merchant: @merchant)
 
-      invoice_item = create(:invoice_item, invoice: invoice_1, item: item_1, quantity: 4, unit_price: 12365)
-      invoice_item = create(:invoice_item, invoice: invoice_2, item: item_2, quantity: 2, unit_price: 12364)
-      invoice_item = create(:invoice_item, invoice: invoice_3, item: item_3, quantity: 5, unit_price: 12367)
+      invoice_item = create(:invoice_item, invoice: invoice_1, item: item_1, quantity: 4, unit_price: 13635)
+      invoice_item = create(:invoice_item, invoice: invoice_2, item: item_2, quantity: 2, unit_price: 79140)
+      invoice_item = create(:invoice_item, invoice: invoice_3, item: item_3, quantity: 5, unit_price: 76941)
 
       transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
       transaction_2 = create(:transaction, invoice: invoice_2, result: "success")
@@ -201,7 +201,22 @@ describe "Merchants Api" do
       get "/api/v1/merchants/#{@merchant.id}/revenue"
 
       revenue = JSON.parse(response.body)
+binding.pry
+      expect(response).to be_successful
+    end
 
+    xit "returns customers with pending invoices associated with one merchant" do
+      customer_1 = create(:customer)
+      customer_2 = create(:customer)
+      customer_3 = create(:customer)
+
+      invoice_1 = create(:invoice, status: "pending", customer: customer_1, merchant: @merchant)
+      invoice_2 = create(:invoice, status: "pending", customer: customer_2, merchant: @merchant)
+      invoice_3 = create(:invoice, status: "not pending", customer: customer_3, merchant: @merchant)
+
+      get "/api/v1/merchants/#{@merchant.id}/customers_with_pending_invoices"
+
+      customers = JSON.parse(response.body)
       expect(response).to be_successful
     end
   end

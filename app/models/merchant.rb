@@ -8,13 +8,13 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :invoices
 
   def self.total_revenue(merchant_id)
-    Invoice.joins(:transactions, :invoice_items)
+    InvoiceItem
+    .joins(invoice: :transactions)
     .where("invoices.merchant_id = ?", merchant_id)
     .where("transactions.result = ?", "success")
-    .sum("invoice_items.quantity * invoice_items.unit_price / 100")
-    .round(2)
+    .sum("invoice_items.quantity * invoice_items.unit_price")
   end
-
+# Invoice.where(merchant_id: merchant_id).joins(:transactions).where("transactions.result = ?", "success").joins(:invoice_items).select("invoices.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue").group("invoices.id")
   def self.associated_invoice(invoice_id)
     joins(:invoices)
     .where(invoices: {id: invoice_id})

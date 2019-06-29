@@ -2,6 +2,6 @@ class RevenueSerializer
   include FastJsonapi::ObjectSerializer
 
   attribute :revenue do |object|
-  result = (Merchant.total_revenue(object.id))
+   ((Merchant.total_revenue(object.id)).to_f / 100).to_s
   end
 end
