@@ -107,5 +107,92 @@ describe "Items Api" do
       expect(response).to be_successful
       end
     end
+
+    describe "Items business logic" do
+      it "loads the best day for a single item" do
+        merchant = create(:merchant)
+        customer = create(:customer)
+
+        item_1 = create(:item, merchant: merchant)
+        item_2 = create(:item, merchant: merchant)
+        item_3 = create(:item, merchant: merchant)
+
+        invoice_1 = create(:invoice, customer: customer, merchant: merchant, updated_at: "2012-03-23 16:54:11 UTC" )
+        invoice_2 = create(:invoice, customer: customer, merchant: merchant, updated_at: "2012-03-16 10:54:11 UTC")
+        invoice_3 = create(:invoice, customer: customer, merchant: merchant, updated_at: "2012-03-16 10:54:11 UTC")
+
+        invoice_item_1 = create(:invoice_item, quantity: 10, invoice: invoice_1, item: item_1)
+        invoice_item_2 = create(:invoice_item, quantity: 9, invoice: invoice_2, item: item_2)
+        invoice_item_3 = create(:invoice_item, quantity: 8, invoice: invoice_3, item: item_3)
+
+        transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
+        transaction_2 = create(:transaction, invoice: invoice_2, result: "success")
+        transaction_3 = create(:transaction, invoice: invoice_3, result: "success")
+
+        get "/api/v1/items/#{item_1.id}/best_day"
+
+        day = JSON.parse(response.body)
+
+        expect(response).to be_successful
+        expect(day["data"]["attributes"]["best_day"]).to eq("2012-03-23")
+      end
+
+      it "loads the top items by number sold with a given number" do
+        merchant = create(:merchant)
+        customer = create(:customer)
+
+        item_1 = create(:item, merchant: merchant)
+        item_2 = create(:item, merchant: merchant)
+        item_3 = create(:item, merchant: merchant)
+
+        invoice_1 = create(:invoice, customer: customer, merchant: merchant, updated_at: "2012-03-23 16:54:11 UTC" )
+        invoice_2 = create(:invoice, customer: customer, merchant: merchant, updated_at: "2012-03-16 10:54:11 UTC")
+        invoice_3 = create(:invoice, customer: customer, merchant: merchant, updated_at: "2012-03-16 10:54:11 UTC")
+
+        invoice_item_1 = create(:invoice_item, quantity: 10, invoice: invoice_1, item: item_1)
+        invoice_item_2 = create(:invoice_item, quantity: 9, invoice: invoice_2, item: item_2)
+        invoice_item_3 = create(:invoice_item, quantity: 8, invoice: invoice_3, item: item_3)
+
+        transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
+        transaction_2 = create(:transaction, invoice: invoice_2, result: "success")
+        transaction_3 = create(:transaction, invoice: invoice_3, result: "success")
+
+        get "/api/v1/items/most_items?quantity=3"
+
+        items = JSON.parse(response.body)
+
+        expect(response).to be_successful
+        expect(items["data"].first["id"].to_i).to eq(item_1.id)
+      end
+
+
+      it "loads the top items by total revenue with a given number" do
+        merchant = create(:merchant)
+        customer = create(:customer)
+
+        item_1 = create(:item, merchant: merchant)
+        item_2 = create(:item, merchant: merchant)
+        item_3 = create(:item, merchant: merchant)
+
+        invoice_1 = create(:invoice, customer: customer, merchant: merchant, updated_at: "2012-03-23 16:54:11 UTC" )
+        invoice_2 = create(:invoice, customer: customer, merchant: merchant, updated_at: "2012-03-16 10:54:11 UTC")
+        invoice_3 = create(:invoice, customer: customer, merchant: merchant, updated_at: "2012-03-16 10:54:11 UTC")
+
+        invoice_item_1 = create(:invoice_item, quantity: 10, unit_price: "274.09", invoice: invoice_1, item: item_1)
+        invoice_item_2 = create(:invoice_item, quantity: 9, unit_price: "274.09", invoice: invoice_2, item: item_2)
+        invoice_item_3 = create(:invoice_item, quantity: 8, unit_price: "274.09", invoice: invoice_3, item: item_3)
+
+        transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
+        transaction_2 = create(:transaction, invoice: invoice_2, result: "success")
+        transaction_3 = create(:transaction, invoice: invoice_3, result: "success")
+
+        get "/api/v1/items/most_revenue?quantity=3"
+
+        items = JSON.parse(response.body)
+
+        expect(response).to be_successful
+        expect(items["data"].first["id"].to_i).to eq(item_1.id)
+      end
+    end
   end
 end

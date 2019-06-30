@@ -70,10 +70,13 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       namespace :items do
-          get "/find", to: "search#show"
-          get "/find_all", to: "search#index"
-          get "/:id/invoice_items", to: "invoice_items#show"
-          get "/:id/merchant", to: "merchant#show"
+        get "/find", to: "search#show"
+        get "/find_all", to: "search#index"
+        get "/:id/invoice_items", to: "invoice_items#show"
+        get "/:id/merchant", to: "merchant#show"
+        get "/:id/best_day", to: "date#show"
+        get "/most_items", to: "rankings#index"
+        get "/most_revenue", to: "revenue#index"
       end
     end
   end
