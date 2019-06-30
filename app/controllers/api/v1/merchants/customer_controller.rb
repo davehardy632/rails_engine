@@ -5,6 +5,12 @@ class Api::V1::Merchants::CustomerController < ApplicationController
   end
 
   def index
-    render json: CustomerSerializer.new(Customer.with_pending_invoices(params[:id]))
+    render json: CustomerSerializer.new(Customer.with_pending_invoices(customer_params))
+  end
+
+  private
+
+  def customer_params
+    params.permit(:id)
   end
 end

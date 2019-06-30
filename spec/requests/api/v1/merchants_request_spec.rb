@@ -230,20 +230,6 @@ describe "Merchants Api" do
       expect(response).to be_successful
     end
 
-    xit "returns customers with pending invoices associated with one merchant" do
-      customer_1 = create(:customer)
-      customer_2 = create(:customer)
-      customer_3 = create(:customer)
-
-      invoice_1 = create(:invoice, customer: customer_1, merchant: @merchant)
-      invoice_2 = create(:invoice, customer: customer_2, merchant: @merchant)
-      invoice_3 = create(:invoice, customer: customer_3, merchant: @merchant)
-
-      get "/api/v1/merchants/#{@merchant.id}/customers_with_pending_invoices"
-
-      customers = JSON.parse(response.body)
-      expect(response).to be_successful
-    end
 
     it "loads total revenue for a date across all merchants" do
       merchant_2 = create(:merchant)
@@ -326,6 +312,32 @@ describe "Merchants Api" do
 
       merchants = JSON.parse(response.body)
 
+      expect(response).to be_successful
+    end
+
+
+    it "returns customers with pending invoices associated with one merchant" do
+      customer_1 = create(:customer)
+      customer_2 = create(:customer)
+      customer_3 = create(:customer)
+
+      invoice_1 = create(:invoice, customer: customer_1, merchant: @merchant)
+      invoice_2 = create(:invoice, customer: customer_2, merchant: @merchant)
+      invoice_3 = create(:invoice, customer: customer_3, merchant: @merchant)
+
+      transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
+      transaction_2 = create(:transaction, invoice: invoice_1, result: "success")
+      transaction_3 = create(:transaction, invoice: invoice_1, result: "success")
+      transaction_4 = create(:transaction, invoice: invoice_2, result: "failed")
+      transaction_5 = create(:transaction, invoice: invoice_2, result: "success")
+      transaction_6 = create(:transaction, invoice: invoice_2, result: "failed")
+      transaction_7 = create(:transaction, invoice: invoice_3, result: "failed")
+      transaction_8 = create(:transaction, invoice: invoice_3, result: "failed")
+      transaction_9 = create(:transaction, invoice: invoice_3, result: "failed")
+
+      get "/api/v1/merchants/#{@merchant.id}/customers_with_pending_invoices"
+
+      customers = JSON.parse(response.body)
       expect(response).to be_successful
     end
   end
