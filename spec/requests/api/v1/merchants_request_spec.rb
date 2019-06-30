@@ -330,13 +330,3 @@ describe "Merchants Api" do
     end
   end
 end
-# def test_loads_total_revenue_for_a_date_across_all_merchants
-#     date_one = "2012-03-16"
-#     date_two = "2012-03-07"
-#
-#     total_revenue_one = load_data("/api/v1/merchants/revenue?date=#{date_one}")["data"]
-#     total_revenue_two = load_data("/api/v1/merchants/revenue?date=#{date_two}")["data"]
-#
-#     assert_equal ({"total_revenue" => "2495397.37"}), total_revenue_one["attributes"]
-#     assert_equal ({"total_revenue" => "2705630.42"}), total_revenue_two["attributes"]
-#   end
