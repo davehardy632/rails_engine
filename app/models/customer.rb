@@ -23,9 +23,7 @@ class Customer < ApplicationRecord
     .first
   end
 
-  def self.with_pending_invoices(merchant_id)
-    joins(:invoices)
-    .where("invoices.merchant_id = ?", merchant_id)
-    .where("invoices.status = ?", "pending")
-  end
+  def self.with_pending_invoices(merchant_params)
+    find_by_sql(["SELECT customers.* FROM customers RIGHT JOIN invoices ON invoices.customer_id = customers.id JOIN merchants ON invoices.merchant_id = merchants.id WHERE (invoices.merchant_id = '#{merchant_params["id"]}') AND invoices.id NOT IN (SELECT transactions.invoice_id FROM transactions WHERE transactions.result = 'success')", 'customers.id'])
+   end
 end
