@@ -22,4 +22,10 @@ class Customer < ApplicationRecord
     .where("invoices.id = ?", invoice_id)
     .first
   end
+
+  def self.with_pending_invoices(merchant_id)
+    joins(:invoices)
+    .where("invoices.merchant_id = ?", merchant_id)
+    .where("invoices.status = ?", "pending")
+  end
 end
