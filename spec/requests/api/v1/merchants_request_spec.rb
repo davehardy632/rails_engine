@@ -201,7 +201,32 @@ describe "Merchants Api" do
       get "/api/v1/merchants/#{@merchant.id}/revenue"
 
       revenue = JSON.parse(response.body)
-binding.pry
+
+      expect(response).to be_successful
+    end
+
+    it "returns total revenue for a merchant from successful transactions by a given date" do
+      customer = create(:customer)
+      invoice_1 = create(:invoice, customer: customer, merchant: @merchant, updated_at: "2012-03-16 10:54:11 UTC")
+      invoice_2 = create(:invoice, customer: customer, merchant: @merchant)
+      invoice_3 = create(:invoice, customer: customer, merchant: @merchant)
+
+      item_1 = create(:item, merchant: @merchant)
+      item_2 = create(:item, merchant: @merchant)
+      item_3 = create(:item, merchant: @merchant)
+
+      invoice_item = create(:invoice_item, invoice: invoice_1, item: item_1, quantity: 4, unit_price: 13635)
+      invoice_item = create(:invoice_item, invoice: invoice_2, item: item_2, quantity: 2, unit_price: 79140)
+      invoice_item = create(:invoice_item, invoice: invoice_3, item: item_3, quantity: 5, unit_price: 76941)
+
+      transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
+      transaction_2 = create(:transaction, invoice: invoice_2, result: "success")
+      transaction_3 = create(:transaction, invoice: invoice_3, result: "success")
+
+      get "/api/v1/merchants/#{@merchant.id}/revenue?date=2012-03-16"
+
+      revenue = JSON.parse(response.body)
+
       expect(response).to be_successful
     end
 
@@ -219,5 +244,99 @@ binding.pry
       customers = JSON.parse(response.body)
       expect(response).to be_successful
     end
+
+    it "loads total revenue for a date across all merchants" do
+      merchant_2 = create(:merchant)
+      merchant_3 = create(:merchant)
+
+      customer = create(:customer)
+      invoice_1 = create(:invoice, customer: customer, merchant: @merchant, updated_at: "2012-03-16 10:54:11 UTC")
+      invoice_2 = create(:invoice, customer: customer, merchant: merchant_2, updated_at: "2012-03-16 10:54:11 UTC")
+      invoice_3 = create(:invoice, customer: customer, merchant: merchant_3, updated_at: "2012-03-16 10:54:11 UTC")
+
+      item_1 = create(:item, merchant: @merchant)
+      item_2 = create(:item, merchant: merchant_2)
+      item_3 = create(:item, merchant: merchant_3)
+
+      invoice_item = create(:invoice_item, invoice: invoice_1, item: item_1, quantity: 4, unit_price: 13635)
+      invoice_item = create(:invoice_item, invoice: invoice_2, item: item_2, quantity: 2, unit_price: 79140)
+      invoice_item = create(:invoice_item, invoice: invoice_3, item: item_3, quantity: 5, unit_price: 76941)
+
+      transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
+      transaction_2 = create(:transaction, invoice: invoice_2, result: "success")
+      transaction_3 = create(:transaction, invoice: invoice_3, result: "success")
+
+
+      get "/api/v1/merchants/revenue?date=2012-03-16"
+
+      total_revenue = JSON.parse(response.body)
+      expect(response).to be_successful
+    end
+
+    it "loads merchants ranked by total revenue and returns a given number" do
+      merchant_2 = create(:merchant)
+      merchant_3 = create(:merchant)
+
+      customer = create(:customer)
+      invoice_1 = create(:invoice, customer: customer, merchant: @merchant, updated_at: "2012-03-16 10:54:11 UTC")
+      invoice_2 = create(:invoice, customer: customer, merchant: merchant_2, updated_at: "2012-03-16 10:54:11 UTC")
+      invoice_3 = create(:invoice, customer: customer, merchant: merchant_3, updated_at: "2012-03-16 10:54:11 UTC")
+
+      item_1 = create(:item, merchant: @merchant)
+      item_2 = create(:item, merchant: merchant_2)
+      item_3 = create(:item, merchant: merchant_3)
+
+      invoice_item = create(:invoice_item, invoice: invoice_1, item: item_1, quantity: 4, unit_price: 13635)
+      invoice_item = create(:invoice_item, invoice: invoice_2, item: item_2, quantity: 2, unit_price: 79140)
+      invoice_item = create(:invoice_item, invoice: invoice_3, item: item_3, quantity: 5, unit_price: 76941)
+
+      transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
+      transaction_2 = create(:transaction, invoice: invoice_2, result: "success")
+      transaction_3 = create(:transaction, invoice: invoice_3, result: "success")
+
+      get "/api/v1/merchants/most_revenue?quantity=3"
+
+      sort_m_by_rev = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
+
+    it "loads merchants ranked by total items sold" do
+      merchant_2 = create(:merchant)
+      merchant_3 = create(:merchant)
+
+      customer = create(:customer)
+      invoice_1 = create(:invoice, customer: customer, merchant: @merchant, updated_at: "2012-03-16 10:54:11 UTC")
+      invoice_2 = create(:invoice, customer: customer, merchant: merchant_2, updated_at: "2012-03-16 10:54:11 UTC")
+      invoice_3 = create(:invoice, customer: customer, merchant: merchant_3, updated_at: "2012-03-16 10:54:11 UTC")
+
+      item_1 = create(:item, merchant: @merchant)
+      item_2 = create(:item, merchant: merchant_2)
+      item_3 = create(:item, merchant: merchant_3)
+
+      invoice_item = create(:invoice_item, invoice: invoice_1, item: item_1, quantity: 4, unit_price: 13635)
+      invoice_item = create(:invoice_item, invoice: invoice_2, item: item_2, quantity: 2, unit_price: 79140)
+      invoice_item = create(:invoice_item, invoice: invoice_3, item: item_3, quantity: 5, unit_price: 76941)
+
+      transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
+      transaction_2 = create(:transaction, invoice: invoice_2, result: "success")
+      transaction_3 = create(:transaction, invoice: invoice_3, result: "success")
+
+      get "/api/v1/merchants/most_items?quantity=3"
+
+      merchants = JSON.parse(response.body)
+
+      expect(response).to be_successful
+    end
   end
 end
+# def test_loads_total_revenue_for_a_date_across_all_merchants
+#     date_one = "2012-03-16"
+#     date_two = "2012-03-07"
+#
+#     total_revenue_one = load_data("/api/v1/merchants/revenue?date=#{date_one}")["data"]
+#     total_revenue_two = load_data("/api/v1/merchants/revenue?date=#{date_two}")["data"]
+#
+#     assert_equal ({"total_revenue" => "2495397.37"}), total_revenue_one["attributes"]
+#     assert_equal ({"total_revenue" => "2705630.42"}), total_revenue_two["attributes"]
+#   end

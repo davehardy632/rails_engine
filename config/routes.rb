@@ -36,6 +36,9 @@ Rails.application.routes.draw do
           get "/:id/favorite_customer", to: "customer#show"
           get "/:id/revenue", to: "revenue#show"
           get "/:id/customers_with_pending_invoices", to: "customer#index"
+          get "/revenue", to: "revenue#index"
+          get "/most_revenue", to: "sort_revenue#index"
+          get "/most_items", to: "items_sold#index"
       end
     end
   end
