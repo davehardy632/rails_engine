@@ -235,9 +235,9 @@ describe "Merchants Api" do
       customer_2 = create(:customer)
       customer_3 = create(:customer)
 
-      invoice_1 = create(:invoice, status: "pending", customer: customer_1, merchant: @merchant)
-      invoice_2 = create(:invoice, status: "pending", customer: customer_2, merchant: @merchant)
-      invoice_3 = create(:invoice, status: "not pending", customer: customer_3, merchant: @merchant)
+      invoice_1 = create(:invoice, customer: customer_1, merchant: @merchant)
+      invoice_2 = create(:invoice, customer: customer_2, merchant: @merchant)
+      invoice_3 = create(:invoice, customer: customer_3, merchant: @merchant)
 
       get "/api/v1/merchants/#{@merchant.id}/customers_with_pending_invoices"
 
