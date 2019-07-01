@@ -17,6 +17,12 @@ class Customer < ApplicationRecord
     .first
   end
 
+  def transactions
+    invoices
+    .joins(:transactions)
+    .select("transactions.*")
+  end
+
   def self.associated_invoice(invoice_id)
     joins(:invoices)
     .where("invoices.id = ?", invoice_id)
