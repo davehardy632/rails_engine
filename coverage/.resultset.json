@@ -18,13 +18,19 @@
         null,
         null,
         null,
-        1,
+        2,
         null,
         null,
         1,
         null,
         null,
         1,
+        null,
+        null,
+        1,
+        null,
+        null,
+        2,
         null,
         null,
         1,
@@ -1602,7 +1608,6 @@
         1,
         null,
         null,
-        null,
         null
       ],
       "/Users/davehardy632/turing/3module/projects/rails_engine/app/serializers/transaction_serializer.rb": [
@@ -2070,6 +2075,6 @@
         null
       ]
     },
-    "timestamp": 1561986913
+    "timestamp": 1562007536
   }
 }
