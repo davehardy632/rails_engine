@@ -14,10 +14,6 @@ This Application uses Ruby version 2.4.1, and Rails 5.2.3
   
   $ bundle
   
-  To set up the testing suite, this application uses rspec, run the following command.
-  
-  $ rails g rspec:install
-  
   To set up the database, run the following..
   
   $ rails db:create
